@@ -1,0 +1,16 @@
+*~
+*.log
+*.out
+*.tmp
+*.swp
+*.pid
+*.pem
+*.pub
+*.gem
+*.lock
+doc
+pkg
+.DS_Store
+config.json
+.bundle
+.yardoc
