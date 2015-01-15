@@ -1,8 +1,11 @@
+require 'json'
+
 require 'thor'
 require 'thor/util'
 require 'thor/actions'
 
 require_relative 'mjölnir'
+require_relative 'helpers'
 require_relative 'commands'
 require_relative 'metadata'
 
@@ -11,6 +14,7 @@ module StacksOnDeck
 
   # StacksOnDeck's entrypoint.
   class Main < Mjölnir
+    include StacksOnDeck::Helpers
     include StacksOnDeck::Commands
 
 
@@ -26,30 +30,25 @@ module StacksOnDeck
     end
 
 
-    desc 'snapshot', 'Stop, snapshot, and restart an instance'
+    desc 'servers', 'List OpenStack compute (Nova) instances'
     include_common_options
-    option :instance_id, \
-      type: :string,
-      aliases: %w[ -i ],
-      desc: 'Specify an instance ID'
-    option :instance_name, \
-      type: :string,
-      aliases: %w[ -n ],
-      desc: 'Specify an instance name'
-    def snapshot
-      if options.instance_id and options.instance_name
-        error "Provide a value for either '--instance-id' or '--instance-name' (not both)"
-        exit 1
+    def servers
+      compute = os 'compute'
+      servers = compute.servers.map do |s|
+        compute.server(s[:id]).to_hash
       end
-
-      unless options.instance_id or options.instance_name
-        error "No value provided for either '--instance-id' or '--instance-name'"
-        exit 1
-      end
-
-      instance = find_instance options.instance_id, options.instance_name
-      snapshot_instance instance
+      log.info command: 'servers', servers: servers
     end
+
+
+    desc 'server INSTANCE_ID', 'Show an OpenStack compute (Nova) instance'
+    include_common_options
+    def server instance_id
+      compute = os 'compute'
+      server  = compute.server(instance_id).to_hash
+      log.info command: 'server', server: server
+    end
+
 
   end
 end

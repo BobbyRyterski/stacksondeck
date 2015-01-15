@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'thor', '~> 0'
   s.add_runtime_dependency 'slog', '~> 1'
+  s.add_runtime_dependency 'hashie', '~> 3'
   s.add_runtime_dependency 'openstack', '~> 1'
 
   s.files         = `git ls-files`.split("\n")
