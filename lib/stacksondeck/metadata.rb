@@ -4,7 +4,7 @@ module StacksOnDeck
   NAME     = 'stacksondeck'
 
   # A quick summary for use in the command-line interface
-  SUMMARY  = %q.Helpful stuff for OpenStack.
+  SUMMARY  = %q.Stupid simple Chef-Rundeck integration.
 
   # Take credit for your work
   AUTHOR   = 'Sean Clemmer'

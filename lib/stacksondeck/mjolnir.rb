@@ -1,12 +1,11 @@
-require 'thor'
 require 'slog'
-require 'openstack'
+require 'thor'
 
 
 module StacksOnDeck
 
   # Thor's hammer! Like Thor with better logging
-  class Mjölnir < Thor
+  class Mjolnir < Thor
 
     # Common options for Thor commands
     COMMON_OPTIONS = {
@@ -16,21 +15,9 @@ module StacksOnDeck
         desc: 'Log to file instead of STDOUT',
         default: ENV['SOD_LOG'] || nil
       },
-      color: {
-        type: :boolean,
-        aliases: %w[ -c ],
-        desc: 'Colorize log events by level',
-        default: ENV['SOD_COLOR'] || true
-      },
-      pretty: {
-        type: :boolean,
-        aliases: %w[ -c ],
-        desc: 'Use pretty JSON for log events',
-        default: ENV['SOD_PRETTY'] || true
-      },
       debug: {
         type: :boolean,
-        aliases: %w[ -d ],
+        aliases: %w[ -v ],
         desc: 'Enable DEBUG-level logging',
         default: ENV['SOD_DEBUG'] || false
       },
@@ -39,36 +26,6 @@ module StacksOnDeck
         aliases: %w[ -z ],
         desc: 'Enable TRACE-level logging',
         default: ENV['SOD_TRACE'] || false
-      },
-      auth_url: {
-        type: :boolean,
-        aliases: %w[ -u ],
-        desc: 'OpenStack authorization URL',
-        default: ENV['OS_AUTH_URL']
-      },
-      auth_method: {
-        type: :string,
-        aliases: %w[ -m ],
-        desc: 'OpenStack authorization method',
-        default: ENV['OS_AUTH_METHOD'] || 'password'
-      },
-      auth_tenant: {
-        type: :string,
-        aliases: %w[ -t ],
-        desc: 'OpenStack authorization tenant ID',
-        default: ENV['OS_TENANT_ID']
-      },
-      auth_user: {
-        type: :string,
-        aliases: %w[ -u ],
-        desc: 'OpenStack authorization username',
-        default: ENV['OS_USERNAME']
-      },
-      auth_pass: {
-        type: :string,
-        aliases: %w[ -p ],
-        desc: 'OpenStack autorization password',
-        default: ENV['OS_PASSWORD']
       }
     }
 
@@ -107,11 +64,12 @@ module StacksOnDeck
         level = :debug if options.debug?
         level = :trace if options.trace?
         device = options.log || $stderr
+        pretty = device.tty? rescue false
         @logger = Slog.new \
           out: device,
           level: level,
-          colorize: options.color?,
-          prettify: options.pretty?
+          colorize: pretty,
+          prettify: pretty
       end
 
     end
