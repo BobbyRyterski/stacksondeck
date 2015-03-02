@@ -7,6 +7,7 @@ require 'ridley'
 require 'daybreak'
 require 'sinatra/base'
 
+require_relative 'metadata'
 
 
 module StacksOnDeck
@@ -31,6 +32,10 @@ module StacksOnDeck
       @@db_dump
     end
 
+    get '/v' do
+      content_type :text
+      VERSION
+    end
 
 
   private

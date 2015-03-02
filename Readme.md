@@ -49,7 +49,12 @@ You're most likely inteterested in the `server` command:
 
     Start application web server
 
+
 ## API
+
+### Version `GET /v`
+
+Return the application version.
 
 ### Node Resources `GET /`
 
