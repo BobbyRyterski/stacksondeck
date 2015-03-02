@@ -49,16 +49,14 @@ You're most likely inteterested in the `server` command:
 
     Start application web server
 
+**N.B.** At Blue Jeans we use the [`bjn_sod` cookbook](https://github.com/sczizzo/bjn-sod-cookbook)
+to deploy Stacks on Deck.
 
 ## API
 
-### Version `GET /v`
+### `GET /`
 
-Return the application version.
-
-### Node Resources `GET /`
-
-Renders Chef nodes as a Rundeck Resource Model in YAML format. Sample response:
+Renders Chef nodes as a Rundeck Resource Model in [RESOURCE-YAML](http://rundeck.org/docs/man5/resource-yaml.html):
 
     ---
     example-node:
@@ -74,6 +72,14 @@ Renders Chef nodes as a Rundeck Resource Model in YAML format. Sample response:
       tags:
       - example-node
       - example
+
+### `GET /v`
+
+Return the application version:
+
+    1.0.0
+
+(Yeah I lied when I said only one endpoint. Sue me.)
 
 
 ## Changelog
