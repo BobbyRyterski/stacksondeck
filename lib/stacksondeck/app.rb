@@ -111,6 +111,7 @@ module StacksOnDeck
         next if n.hostname.nil?
 
         node_resources[name] = {
+          'nodename' => name,
           'hostname' => n.hostname,
           'description' => n.fqdn,
           'osArch' => n.kernel.machine,
@@ -120,7 +121,7 @@ module StacksOnDeck
           'username' => username,
           'remoteUrl' => remoteUrl,
           'editUrl' => editUrl,
-          'tags' => tags
+          'tags' => tags.join(',')
         }
       end
 
