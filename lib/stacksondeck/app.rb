@@ -101,6 +101,8 @@ module StacksOnDeck
         tags << n.chef_environment
         tags.compact!
 
+        next if n.hostname.nil?
+
         node_resources[name] = {
           'hostname' => n.hostname,
           'description' => n.fqdn,
