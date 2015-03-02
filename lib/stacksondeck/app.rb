@@ -42,7 +42,7 @@ module StacksOnDeck
 
     def self.db_copy
       @@db.lock do
-        @@db.inject({}) { |h,(k,v)| h[k] = v }
+        @@db.inject({}) { |h,(k,v)| h[k] = v ; h }
       end
     end
 
