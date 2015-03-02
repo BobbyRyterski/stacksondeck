@@ -130,8 +130,6 @@ module StacksOnDeck
         @@db.update! node_resources
       end
 
-      reopen!
-
       @@db_dump = YAML.dump node_resources
 
       @@last_modified = Time.now
@@ -143,6 +141,8 @@ module StacksOnDeck
 
     rescue Celluloid::Task::TerminatedError
       # nop
+    rescue
+      reopen!
     end
 
 
