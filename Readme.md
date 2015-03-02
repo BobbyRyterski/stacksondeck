@@ -9,6 +9,9 @@ for a configurable amount of time (`--refresh`). SOD is [crash-only software](ht
 application state is backed up to disk (`--database`). You may also wish to
 override the Rundeck user name to suit your environment (`--username`).
 
+**N.B.** SOD merges a Chef node's environments, roles, and tags into Rundeck
+tags. This behavior is not currently configurable.
+
 
 ## Usage
 
@@ -19,7 +22,7 @@ override the Rundeck user name to suit your environment (`--username`).
       sod server          # Start application web server
       sod version         # Echo the application version
 
-You're most likely inteterested in `server`:
+You're most likely inteterested in the `server` command:
 
     $ sod help server
     Usage:
@@ -55,14 +58,14 @@ Renders Chef nodes as a Rundeck Resource Model in YAML format. Sample response:
     ---
     example-node:
       hostname: example-node
-      description: example-node.mydomain
+      description: example-node.example.com
       osArch: x86_64
       osVersion: '12.04'
       osFamily: debian
       osName: ubuntu
       username: "${job.username}"
-      remoteUrl: http://chef-server.mydomain/nodes/example-node
-      editUrl: http://chef-server.mydomain/nodes/example-node/edit
+      remoteUrl: http://chef-server.example.com/nodes/example-node
+      editUrl: http://chef-server.example.com/nodes/example-node/edit
       tags:
       - example-node
       - example

@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'sinatra', '~> 1.4'
   s.add_runtime_dependency 'daybreak', '~> 0.3'
   s.add_runtime_dependency 'ridley', '~> 4.1'
+  s.add_runtime_dependency 'thin', '~> 1'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- test/*`.split("\n")

@@ -3,7 +3,6 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'thin'
   gem 'pry'
   gem 'rake'
   gem 'yard'
