@@ -2,6 +2,13 @@
 
 Stupid simple Chef-Rundeck integration.
 
+Stacks on Deck (SOD) serves up a single endpoint, which may be used as URL
+Resource Model Source in Rundeck. In the background, SOD searches for nodes on a
+Chef server using the provided knife credentials (`--config`); results are cached
+for a configurable amount of time (`--refresh`). SOD is [crash-only software](https://www.usenix.org/legacy/events/hotos03/tech/full_papers/candea/candea.pdf);
+application state is backed up to disk (`--database`). You may also wish to
+override the Rundeck user name to suit your environment (`--username`).
+
 
 ## Usage
 
@@ -32,9 +39,22 @@ You're most likely inteterested in `server`:
       -u, [--username=USERNAME]        # Username value for Rundeck node
                                        # Default: ${job.username}
       -r, [--refresh=N]                # Refresh interval in seconds
-                                       # Default: 900
+                                       # Default: 60
       -l, [--log=LOG]                  # Log to file instead of STDOUT
       -v, [--debug], [--no-debug]      # Enable DEBUG-level logging
       -z, [--trace], [--no-trace]      # Enable TRACE-level logging
 
     Start application web server
+
+## API
+
+### Node Resources `GET /`
+
+Renders Chef nodes as a Rundeck Resource Model in YAML format.
+
+
+## Changelog
+
+#### v1.0.0
+
+- Stupid simple Chef-Rundeck integration

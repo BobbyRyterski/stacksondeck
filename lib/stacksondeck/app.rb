@@ -42,14 +42,14 @@ module StacksOnDeck
 
     def self.db_copy
       @@db.lock do
-        @@db.map { |_,v| v }
+        @@db.inject({}) { |h,(k,v)| h[k] = v }
       end
     end
 
 
     def self.open!
       reopen!
-      log.debug event: 'open!', db: settings.database
+      log.info event: 'open!', db: settings.database
       @@db_dump = YAML.dump db_copy
     end
 
@@ -62,14 +62,12 @@ module StacksOnDeck
 
 
     def self.close!
-      log.debug event: 'close!', db: settings.database
+      log.info event: 'close!', db: settings.database
       @@db.close
     end
 
 
     def self.refresh!
-      log.debug event: 'refresh!', config: settings.config
-
       started = Time.now
 
       ridley = Ridley.from_chef_config settings.config
@@ -104,7 +102,6 @@ module StacksOnDeck
         tags.compact!
 
         node_resources[name] = {
-          'nodename' => name,
           'hostname' => n.hostname,
           'description' => n.fqdn,
           'osArch' => n.kernel.machine,
@@ -125,9 +122,9 @@ module StacksOnDeck
 
       reopen!
 
-      @@db_dump = YAML.dump node_resources.values
+      @@db_dump = YAML.dump node_resources
 
-      log.debug event: 'refreshed!', elapsed: (Time.now - started)
+      log.info event: 'refreshed!', elapsed: (Time.now - started)
 
       return node_resources
 

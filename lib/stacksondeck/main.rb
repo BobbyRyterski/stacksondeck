@@ -86,7 +86,7 @@ module StacksOnDeck
         Thread.abort_on_exception = true
       end
 
-      log.debug event: 'server starting', options: options
+      log.info event: 'server', options: options
       App.run!
     end
 
