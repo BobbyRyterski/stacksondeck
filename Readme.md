@@ -50,7 +50,22 @@ You're most likely inteterested in `server`:
 
 ### Node Resources `GET /`
 
-Renders Chef nodes as a Rundeck Resource Model in YAML format.
+Renders Chef nodes as a Rundeck Resource Model in YAML format. Sample response:
+
+    ---
+    example-node:
+      hostname: example-node
+      description: example-node.mydomain
+      osArch: x86_64
+      osVersion: '12.04'
+      osFamily: debian
+      osName: ubuntu
+      username: "${job.username}"
+      remoteUrl: http://chef-server.mydomain/nodes/example-node
+      editUrl: http://chef-server.mydomain/nodes/example-node/edit
+      tags:
+      - example-node
+      - example
 
 
 ## Changelog
