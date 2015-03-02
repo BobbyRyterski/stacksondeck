@@ -27,6 +27,7 @@ module StacksOnDeck
 
     get '/' do
       content_type :yaml
+      last_modified @@last_modified
       @@db_dump
     end
 
@@ -51,6 +52,7 @@ module StacksOnDeck
       reopen!
       log.info event: 'open!', db: settings.database
       @@db_dump = YAML.dump db_copy
+      @@last_modified = Time.now
     end
 
 
@@ -125,6 +127,8 @@ module StacksOnDeck
       reopen!
 
       @@db_dump = YAML.dump node_resources
+
+      @@last_modified = Time.now
 
       log.info event: 'refreshed!', elapsed: (Time.now - started)
 
