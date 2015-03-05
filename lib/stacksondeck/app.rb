@@ -60,6 +60,7 @@ module StacksOnDeck
       @@db = Daybreak::DB.new settings.database
       @@db_dump = YAML.dump db_copy
       @@last_modified = Time.now
+      @@ridley = Ridley.from_chef_config settings.config
     end
 
 
@@ -73,11 +74,7 @@ module StacksOnDeck
     def self.refresh!
       started = Time.now
 
-      ridley = Ridley.from_chef_config settings.config
-
-      chef_server_url = ridley.server_url
-
-      nodes = ridley.partial_search :node, 'name:*', %w[
+      nodes = @@ridley.partial_search :node, 'name:*', %w[
         name
         hostname
         fqdn
@@ -95,9 +92,10 @@ module StacksOnDeck
       nodes.each do |n|
         name = n.name
         n = n.automatic
-        username = settings.username
-        remoteUrl = File.join chef_server_url, 'nodes', name
-        editUrl = File.join remoteUrl, 'edit'
+
+        username  = settings.username
+        remoteUrl = File.join @@ridley.server_url, 'nodes', name
+        editUrl   = File.join remoteUrl, 'edit'
 
         tags  = n.tags  || []
         tags += n.roles || []
@@ -107,7 +105,6 @@ module StacksOnDeck
         next if n.hostname.nil?
 
         node_resources[name] = {
-          'nodename' => name,
           'hostname' => n.hostname,
           'description' => n.fqdn,
           'osArch' => n.kernel.machine,
@@ -133,10 +130,6 @@ module StacksOnDeck
       log.info event: 'refreshed!', elapsed: (Time.now - started)
 
       return node_resources
-
-
-    rescue Celluloid::Task::TerminatedError
-      # nop
     end
 
 
