@@ -14,14 +14,16 @@ module StacksOnDeck
   class App < Sinatra::Application
 
     def self.run!
-      open!
       at_exit { close! }
+      open!
+
       Thread.new do
         loop do
           refresh!
           sleep settings.refresh
         end
       end
+
       super
     end
 
@@ -54,22 +56,16 @@ module StacksOnDeck
 
 
     def self.open!
-      reopen!
       log.info event: 'open!', db: settings.database
+      @@db = Daybreak::DB.new settings.database
       @@db_dump = YAML.dump db_copy
       @@last_modified = Time.now
     end
 
 
-    def self.reopen!
-      old_db = @@db if defined? @@db
-      @@db = Daybreak::DB.new settings.database
-      old_db.close if old_db
-    end
-
-
     def self.close!
       log.info event: 'close!', db: settings.database
+      @@db.flush
       @@db.close
     end
 
@@ -141,8 +137,6 @@ module StacksOnDeck
 
     rescue Celluloid::Task::TerminatedError
       # nop
-    rescue
-      reopen!
     end
 
 
