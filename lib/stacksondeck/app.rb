@@ -4,7 +4,6 @@ require 'json'
 require 'yaml'
 
 require 'ridley'
-require 'daybreak'
 require 'sinatra/base'
 
 require_relative 'metadata'
@@ -14,8 +13,12 @@ module StacksOnDeck
   class App < Sinatra::Application
 
     def self.run!
-      at_exit { close! }
-      open!
+      log.info event: 'run!'
+
+      @@db = {}
+      @@db_dump = ''
+      @@last_modified = Time.now
+      @@ridley = Ridley.from_chef_config settings.config
 
       Thread.new do
         loop do
@@ -40,38 +43,16 @@ module StacksOnDeck
     end
 
 
-  private
 
+  private
 
     def self.log ; settings.log end
 
     def log ; settings.log end
 
 
-    def self.db_copy
-      @@db.lock do
-        @@db.inject({}) { |h,(k,v)| h[k] = v ; h }
-      end
-    end
-
-
-    def self.open!
-      log.info event: 'open!', db: settings.database
-      @@db = Daybreak::DB.new settings.database
-      @@db_dump = YAML.dump db_copy
-      @@last_modified = Time.now
-      @@ridley = Ridley.from_chef_config settings.config
-    end
-
-
-    def self.close!
-      log.info event: 'close!', db: settings.database
-      @@db.flush
-      @@db.close
-    end
-
-
     def self.refresh!
+      log.info event: 'refresh!'
       started = Time.now
 
       nodes = @@ridley.partial_search :node, 'name:*', %w[
@@ -87,7 +68,7 @@ module StacksOnDeck
         platform
       ]
 
-      node_resources = {}
+      @@db = {}
 
       nodes.each do |n|
         name = n.name
@@ -104,7 +85,7 @@ module StacksOnDeck
 
         next if n.hostname.nil?
 
-        node_resources[name] = {
+        @@db[name] = {
           'hostname' => n.hostname,
           'description' => n.fqdn,
           'osArch' => n.kernel.machine,
@@ -118,18 +99,13 @@ module StacksOnDeck
         }
       end
 
-      @@db.lock do
-        @@db.clear
-        @@db.update! node_resources
-      end
-
-      @@db_dump = YAML.dump node_resources
+      @@db_dump = YAML.dump @@db
 
       @@last_modified = Time.now
 
-      log.info event: 'refreshed!', elapsed: (Time.now - started)
+      log.info event: 'refreshed', elapsed: (Time.now - started)
 
-      return node_resources
+      return @@db
     end
 
 

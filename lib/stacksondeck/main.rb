@@ -45,11 +45,6 @@ module StacksOnDeck
       aliases: %w[ -c ],
       desc: 'Location of Chef configuration',
       default: '/etc/chef/knife.rb'
-    option :database, \
-      type: :string,
-      aliases: %w[ -d ],
-      desc: 'Location of state database',
-      default: '/etc/sod.db'
     option :username, \
       type: :string,
       aliases: %w[ -u ],
@@ -67,7 +62,6 @@ module StacksOnDeck
       App.set :port, options.port
       App.set :config, options.config
       App.set :refresh, options.refresh
-      App.set :database, options.database
       App.set :username, options.username
       App.set :environment, options.environment
 
