@@ -84,6 +84,10 @@ Return the application version:
 
 ## Changelog
 
+#### v1.1.0
+
+- Even stupider: No DB
+
 #### v1.0.0
 
 - Stupid simple Chef-Rundeck integration
