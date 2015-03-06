@@ -5,9 +5,8 @@ Stupid simple Chef-Rundeck integration.
 Stacks on Deck (SOD) serves up a single endpoint, which may be used as URL
 Resource Model Source in Rundeck. In the background, SOD searches for nodes on a
 Chef server using the provided knife credentials (`--config`); results are cached
-for a configurable amount of time (`--refresh`). SOD is [crash-only software](https://www.usenix.org/legacy/events/hotos03/tech/full_papers/candea/candea.pdf);
-application state is backed up to disk (`--database`). You may also wish to
-override the Rundeck user name to suit your environment (`--username`).
+for a configurable amount of time (`--refresh`). You may also wish to override
+the Rundeck user name to suit your environment (`--username`).
 
 **N.B.** SOD merges a Chef node's environments, roles, and tags into Rundeck
 tags. This behavior is not currently configurable.
@@ -37,8 +36,6 @@ You're most likely inteterested in the `server` command:
                                        # Default: development
       -c, [--config=CONFIG]            # Location of Chef configuration
                                        # Default: /etc/chef/knife.rb
-      -d, [--database=DATABASE]        # Location of state database
-                                       # Default: /etc/sod.db
       -u, [--username=USERNAME]        # Username value for Rundeck node
                                        # Default: ${job.username}
       -r, [--refresh=N]                # Refresh interval in seconds
