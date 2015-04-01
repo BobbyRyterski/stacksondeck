@@ -81,6 +81,10 @@ Return the application version:
 
 ## Changelog
 
+#### v1.1.1
+
+- Return up to a million nodes
+
 #### v1.1.0
 
 - Even stupider: No DB

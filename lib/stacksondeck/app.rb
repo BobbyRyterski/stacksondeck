@@ -66,7 +66,7 @@ module StacksOnDeck
         platform_version
         platform_family
         platform
-      ]
+      ], rows: 1_000_000 # A million hosts oughta be enough for anyone!
 
       @@db = {}
 
