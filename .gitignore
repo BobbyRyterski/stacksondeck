@@ -9,8 +9,9 @@
 *.pub
 *.gem
 *.lock
+*.deb
+*.gz
 doc
-pkg
 tmp
 .DS_Store
 config.json

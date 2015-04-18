@@ -24,6 +24,11 @@ module StacksOnDeck
   # Pull the project version out of the VERSION file
   VERSION = File.read(File.join(ROOT, 'VERSION')).strip
 
+  # Bundled extensions
+  TRAVELING_RUBY_VERSION = '20150210-2.2.0'
+  THIN_VERSION = '1.6.3'
+  EM_VERSION = '1.0.4'
+
   # Big money
   ART = <<-'EOART'
      $$$$$$\   $$$$$$\  $$$$$$$\

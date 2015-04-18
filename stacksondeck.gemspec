@@ -18,10 +18,13 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'hashie', '~> 2'
   s.add_runtime_dependency 'sinatra', '~> 1.4'
   s.add_runtime_dependency 'ridley', '~> 4.1'
-  s.add_runtime_dependency 'thin', '~> 1'
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- test/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
+  # Bundled libs
+  s.add_runtime_dependency 'eventmachine', '= %s' % StacksOnDeck::EM_VERSION
+  s.add_runtime_dependency 'thin', '= %s' % StacksOnDeck::THIN_VERSION
+
+  s.files         = Dir['{bin,lib}/**/*'] + %w[ LICENSE Readme.md VERSION ]
+  s.test_files    = Dir['test/**/*']
+  s.executables   = %w[ sod ]
   s.require_paths = %w[ lib ]
 end
