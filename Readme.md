@@ -51,7 +51,7 @@ to deploy Stacks on Deck.
 
 ## API
 
-### `GET /`
+### `GET /[?username=USERNAME]`
 
 Renders Chef nodes as a Rundeck Resource Model in [RESOURCE-YAML](http://rundeck.org/docs/man5/resource-yaml.html):
 
@@ -70,6 +70,9 @@ Renders Chef nodes as a Rundeck Resource Model in [RESOURCE-YAML](http://rundeck
       - example-node
       - example
 
+If the `username` parameter is given, it will override the value provided on the
+command line.
+
 ### `GET /v`
 
 Return the application version:
@@ -80,6 +83,10 @@ Return the application version:
 
 
 ## Changelog
+
+#### v1.1.2
+
+- Allow override of `username` via query parameter
 
 #### v1.1.1
 

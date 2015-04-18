@@ -34,7 +34,15 @@ module StacksOnDeck
     get '/' do
       content_type :yaml
       last_modified @@last_modified
-      @@db_dump
+      if params['username']
+        override_db = @@db.inject({}) do |h,(k,v)|
+          v['username'] = params['username']
+          h[k] = v ; h
+        end
+        YAML.dump override_db
+      else
+        @@db_dump
+      end
     end
 
     get '/v' do
