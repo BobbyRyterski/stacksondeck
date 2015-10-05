@@ -16,7 +16,7 @@ module StacksOnDeck
       log.info event: 'run!'
 
       @@db = {}
-      @@db_dump = ''
+      @@db_dump = '--- {}'
       @@last_modified = Time.now
       @@ridley = Ridley.from_chef_config settings.config
 
