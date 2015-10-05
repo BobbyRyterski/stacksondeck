@@ -8,8 +8,10 @@ Chef server using the provided knife credentials (`--config`); results are cache
 for a configurable amount of time (`--refresh`). You may also wish to override
 the Rundeck user name to suit your environment (`--username`).
 
-**N.B.** SOD merges a Chef node's environments, roles, and tags into Rundeck
-tags. This behavior is not currently configurable.
+SOD merges a Chef node's environments, roles, and tags into Rundeck tags. This
+behavior is not currently configurable, but you may use the `--tagfile` feature
+(introduced in v1.1.3) to map node names to a list of additional tags, which
+will be merged with the information discovered via Chef Search.
 
 
 ## Usage
@@ -39,7 +41,8 @@ You're most likely inteterested in the `server` command:
       -u, [--username=USERNAME]        # Username value for Rundeck node
                                        # Default: ${job.username}
       -r, [--refresh=N]                # Refresh interval in seconds
-                                       # Default: 60
+                                       # Default: 900
+      -t, [--tagfile=TAGFILE]          # JSON file with node tags
       -l, [--log=LOG]                  # Log to file instead of STDOUT
       -v, [--debug], [--no-debug]      # Enable DEBUG-level logging
       -z, [--trace], [--no-trace]      # Enable TRACE-level logging
@@ -82,7 +85,12 @@ Return the application version:
 (Yeah I lied when I said only one endpoint. Sue me.)
 
 
+
 ## Changelog
+
+#### v1.1.3
+
+- Added new `tagfile` feature
 
 #### v1.1.2
 

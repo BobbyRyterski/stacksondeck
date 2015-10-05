@@ -6,6 +6,8 @@ require_relative 'mjolnir'
 require_relative 'metadata'
 
 
+Thread.abort_on_exception = true
+
 module StacksOnDeck
 
   # StacksOnDeck's entrypoint.
@@ -23,6 +25,14 @@ module StacksOnDeck
       puts "\n%s\n" % ART
     end
 
+    SYSTEM_KNIFE = '/etc/chef/knife.rb'
+    USER_KNIFE   = File.join(ENV['HOME'] || '', '.chef', 'knife.rb')
+
+    DEFAULT_KNIFE = if File.exist? SYSTEM_KNIFE
+      SYSTEM_KNIFE
+    elsif File.exist? USER_KNIFE
+      USER_KNIFE
+    end
 
     desc 'server', 'Start application web server'
     option :bind, \
@@ -44,7 +54,8 @@ module StacksOnDeck
       type: :string,
       aliases: %w[ -c ],
       desc: 'Location of Chef configuration',
-      default: '/etc/chef/knife.rb'
+      default: DEFAULT_KNIFE,
+      required: true
     option :username, \
       type: :string,
       aliases: %w[ -u ],
@@ -55,6 +66,11 @@ module StacksOnDeck
       aliases: %w[ -r ],
       desc: 'Refresh interval in seconds',
       default: 900
+    option :tagfile, \
+      type: :string,
+      aliases: %w[ -t ],
+      desc: 'JSON file with node tags',
+      required: false
     include_common_options
     def server
       App.set :log, log
@@ -64,6 +80,7 @@ module StacksOnDeck
       App.set :refresh, options.refresh
       App.set :username, options.username
       App.set :environment, options.environment
+      App.set :tagfile, options.tagfile
 
       if options.debug?
         App.set :raise_errors, true
@@ -72,13 +89,7 @@ module StacksOnDeck
         App.set :logging, ::Logger::DEBUG
       end
 
-      Celluloid.logger = nil
-      Thread.abort_on_exception = false
-
-      if options.trace?
-        Celluloid.logger = log
-        Thread.abort_on_exception = true
-      end
+      Celluloid.logger = options.trace? ? log : nil
 
       log.info event: 'server', options: options
       App.run!

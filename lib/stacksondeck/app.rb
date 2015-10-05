@@ -59,9 +59,16 @@ module StacksOnDeck
     def log ; settings.log end
 
 
+    def self.refresh_tagfile!
+      return {} if settings.tagfile.nil?
+      JSON.parse File.read(settings.tagfile)
+    end
+
     def self.refresh!
       log.info event: 'refresh!'
       started = Time.now
+
+      node_tags = refresh_tagfile!
 
       nodes = @@ridley.partial_search :node, 'name:*', %w[
         name
@@ -89,7 +96,8 @@ module StacksOnDeck
         tags  = n.tags  || []
         tags += n.roles || []
         tags << n.chef_environment
-        tags.compact!
+        tags += node_tags[name] if node_tags.include? name
+        tags  = tags.uniq.compact
 
         next if n.hostname.nil?
 
