@@ -88,6 +88,10 @@ Return the application version:
 
 ## Changelog
 
+#### v1.1.4
+
+- When no groups defined, report empty mapping rather than nothing
+
 #### v1.1.3
 
 - Added new `tagfile` feature
