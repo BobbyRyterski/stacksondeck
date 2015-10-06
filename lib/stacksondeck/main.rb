@@ -66,10 +66,10 @@ module StacksOnDeck
       aliases: %w[ -r ],
       desc: 'Refresh interval in seconds',
       default: 900
-    option :tagfile, \
+    option :hints, \
       type: :string,
-      aliases: %w[ -t ],
-      desc: 'JSON file with node tags',
+      aliases: %w[ -h ],
+      desc: 'JSON file with node hints',
       required: false
     include_common_options
     def server
@@ -80,7 +80,7 @@ module StacksOnDeck
       App.set :refresh, options.refresh
       App.set :username, options.username
       App.set :environment, options.environment
-      App.set :tagfile, options.tagfile
+      App.set :hints, options.hints
 
       if options.debug?
         App.set :raise_errors, true

@@ -5,6 +5,7 @@ require 'yaml'
 
 require 'ridley'
 require 'sinatra/base'
+require 'deep_merge'
 
 require_relative 'metadata'
 
@@ -59,16 +60,17 @@ module StacksOnDeck
     def log ; settings.log end
 
 
-    def self.refresh_tagfile!
-      return {} if settings.tagfile.nil?
-      JSON.parse File.read(settings.tagfile)
+    def self.refresh_hints!
+      return {} if settings.hints.nil?
+      return {} unless File.exist? settings.hints
+      JSON.parse File.read(settings.hints)
     end
 
     def self.refresh!
       log.info event: 'refresh!'
       started = Time.now
 
-      node_tags = refresh_tagfile!
+      hints = refresh_hints!
 
       nodes = @@ridley.partial_search :node, 'name:*', %w[
         name
@@ -88,18 +90,17 @@ module StacksOnDeck
       nodes.each do |n|
         name = n.name
         n = n.automatic
+        next if n.hostname.nil?
 
-        username  = settings.username
-        remoteUrl = File.join @@ridley.server_url, 'nodes', name
-        editUrl   = File.join remoteUrl, 'edit'
+        node_hints = hints[name] || {}
+        username   = settings.username
+        remote_url = File.join @@ridley.server_url, 'nodes', name
+        edit_url   = File.join remote_url, 'edit'
 
         tags  = n.tags  || []
         tags += n.roles || []
         tags << n.chef_environment
-        tags += node_tags[name] if node_tags.include? name
         tags  = tags.uniq.compact
-
-        next if n.hostname.nil?
 
         @@db[name] = {
           'hostname' => n.hostname,
@@ -109,10 +110,10 @@ module StacksOnDeck
           'osFamily' => n.platform_family,
           'osName' => n.platform,
           'username' => username,
-          'remoteUrl' => remoteUrl,
-          'editUrl' => editUrl,
-          'tags' => tags.join(',')
-        }
+          'remoteUrl' => remote_url,
+          'editUrl' => edit_url,
+          'tags' => tags
+        }.deep_merge!(node_hints)
       end
 
       @@db_dump = YAML.dump @@db

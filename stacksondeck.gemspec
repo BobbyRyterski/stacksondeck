@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'hashie', '~> 2'
   s.add_runtime_dependency 'sinatra', '~> 1.4'
   s.add_runtime_dependency 'ridley', '~> 4.1'
+  s.add_runtime_dependency 'deep_merge', '~> 1.0'
 
   # Bundled libs
   s.add_runtime_dependency 'eventmachine', '= %s' % StacksOnDeck::EM_VERSION
