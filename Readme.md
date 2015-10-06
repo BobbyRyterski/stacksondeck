@@ -9,9 +9,8 @@ for a configurable amount of time (`--refresh`). You may also wish to override
 the Rundeck user name to suit your environment (`--username`).
 
 SOD merges a Chef node's environments, roles, and tags into Rundeck tags. This
-behavior is not currently configurable, but you may use the `--tagfile` feature
-(introduced in v1.1.3) to map node names to a list of additional tags, which
-will be merged with the information discovered via Chef Search.
+behavior is not currently configurable, but you may use the `--hints` feature
+(introduced in v1.2.0) to override information discovered via Chef Search.
 
 
 ## Usage
@@ -42,7 +41,7 @@ You're most likely inteterested in the `server` command:
                                        # Default: ${job.username}
       -r, [--refresh=N]                # Refresh interval in seconds
                                        # Default: 900
-      -t, [--tagfile=TAGFILE]          # JSON file with node tags
+      -h, [--hints=HINTS]              # JSON file with node hints
       -l, [--log=LOG]                  # Log to file instead of STDOUT
       -v, [--debug], [--no-debug]      # Enable DEBUG-level logging
       -z, [--trace], [--no-trace]      # Enable TRACE-level logging
@@ -80,13 +79,17 @@ command line.
 
 Return the application version:
 
-    1.0.0
+    1.2.0
 
 (Yeah I lied when I said only one endpoint. Sue me.)
 
 
 
 ## Changelog
+
+#### v1.2.0
+
+- Replace `tagfile` with more general `hints`
 
 #### v1.1.4
 

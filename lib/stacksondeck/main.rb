@@ -55,7 +55,7 @@ module StacksOnDeck
       aliases: %w[ -c ],
       desc: 'Location of Chef configuration',
       default: DEFAULT_KNIFE,
-      required: true
+      required: DEFAULT_KNIFE.nil?
     option :username, \
       type: :string,
       aliases: %w[ -u ],
