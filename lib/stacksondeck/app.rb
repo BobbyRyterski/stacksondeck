@@ -97,10 +97,11 @@ module StacksOnDeck
         remote_url = File.join @@ridley.server_url, 'nodes', name
         edit_url   = File.join remote_url, 'edit'
 
-        tags  = n.tags  || []
-        tags += n.roles || []
-        tags << n.chef_environment
-        tags  = tags.uniq.compact
+        tags   = n.tags  || []
+        tags  += n.roles || []
+        tags ||= []
+        tags  << n.chef_environment
+        tags   = tags.uniq.compact
 
         @@db[name] = {
           'hostname' => n.hostname,
