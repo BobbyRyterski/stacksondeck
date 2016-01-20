@@ -19,7 +19,8 @@ module StacksOnDeck
       @@db = {}
       @@db_dump = '--- {}'
       @@last_modified = Time.now
-      @@ridley = Ridley.from_chef_config settings.config
+
+      reconnect!
 
       Thread.new do
         loop do
@@ -64,6 +65,10 @@ module StacksOnDeck
       return {} if settings.hints.nil?
       return {} unless File.exist? settings.hints
       JSON.parse File.read(settings.hints)
+    end
+
+    def self.reconnect!
+      @@ridley = Ridley.from_chef_config settings.config
     end
 
     def self.refresh!
@@ -124,13 +129,15 @@ module StacksOnDeck
       log.info event: 'refreshed', elapsed: (Time.now - started)
 
       return @@db
-    rescue Exception => e
+    rescue => e
       log.error \
         event: 'exception',
         exception: e.inspect,
         class: e.class,
         message: e.message,
-        backtrace: e.backtrace
+        backtrace: e.backtrace,
+        remediation: 'reconnecting'
+      reconnect!
       return @@db
     end
 
