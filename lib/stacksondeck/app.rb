@@ -124,6 +124,14 @@ module StacksOnDeck
       log.info event: 'refreshed', elapsed: (Time.now - started)
 
       return @@db
+    rescue Exception => e
+      log.error \
+        event: 'exception',
+        exception: e.inspect,
+        class: e.class,
+        message: e.message,
+        backtrace: e.backtrace
+      return @@db
     end
 
 
